@@ -11,14 +11,13 @@ app = Flask(__name__)
 #######################################################
 @app.route('/api-loja/produtos', methods=['GET'])
 def pesquisar():
-    global conn
     if request.method == 'GET':
         dados = request.get_json()
         idproduto = dados['idproduto']
 
         if idproduto is not None:
             try:
-                conn = sqlite3.connect('database/db-loja.db')
+                conn = sqlite3.connect('bd/db-loja.db')
 
                 if str(idproduto) == '0':
                     sql = '''SELECT * FROM produtos'''
@@ -66,7 +65,7 @@ def inserir():
             registro = (descricao, ganhopercentual, datacriacao)
 
             try:
-                conn = sqlite3.connect('database/db-loja.db')
+                conn = sqlite3.connect('db/db-loja.db')
                 sql = ''' INSERT INTO produtos(descricao, ganhopercentual, datacriacao) VALUES(?,?,?) '''
                 cur = conn.cursor()
                 cur.execute(sql, registro)
@@ -94,7 +93,7 @@ def excluir():
 
         if idproduto:
             try:
-                conn = sqlite3.connect('database/db-loja.db')
+                conn = sqlite3.connect('db/db-loja.db')
                 sql = '''DELETE FROM produtos WHERE idproduto = ''' + str(idproduto)
                 cur = conn.cursor()
                 cur.execute(sql)
@@ -114,7 +113,6 @@ def excluir():
 #######################################################
 @app.route('/api-loja/produtos', methods=['PUT'])
 def alterar():
-    global registro
     if request.method == 'PUT':
         dados = request.get_json()
         descricao = dados['descricao']
@@ -125,7 +123,7 @@ def alterar():
             registro = (descricao, ganhopercentual, idproduto)
 
         try:
-            conn = sqlite3.connect('database/db-loja.db')
+            conn = sqlite3.connect('db/db-loja.db')
             sql = ''' UPDATE produtos SET descricao=?, ganhopercentual=? WHERE idproduto = ?'''
             cur = conn.cursor()
             cur.execute(sql, registro)
